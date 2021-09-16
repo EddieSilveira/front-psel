@@ -1,17 +1,18 @@
 import React from 'react';
+import { TextField, FormLabel } from '@material-ui/core';
 
 const Input = ({ label, type, name, value, onChange, error, onBlur }) => {
   return (
     <div>
-      <label htmlFor={name}>{label}</label>
-      <input
+      <FormLabel htmlFor={name}>{label}</FormLabel>
+      <TextField
         id={name}
         name={name}
         type={type}
         onChange={onChange}
         value={value}
         onBlur={onBlur}
-      ></input>
+      ></TextField>
       {error && <p>{error}</p>}
     </div>
   );

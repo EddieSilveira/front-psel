@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BACKEND } from '../constants/index';
 
 const types = {
@@ -15,6 +15,7 @@ const types = {
 
 const useForm = (type) => {
   const [value, setValue] = useState('');
+
   const [picture, setPicture] = useState({
     path: '',
     originalName: '',
@@ -41,19 +42,17 @@ const useForm = (type) => {
     const data = new FormData();
     data.append('file', file, file.name);
 
-    await fetch(url, {
+    const imageResponse = await fetch(url, {
       method: 'POST',
       body: data,
-    })
-      .then((response) => response.json())
-      .then(({ file }) => {
-        setPicture({
-          path: file.path,
-          originalName: file.originalname,
-          size: file.size,
-          mimeType: file.mimetype,
-        });
-      });
+    }).then((response) => response.json());
+
+    setPicture({
+      path: imageResponse.file.path,
+      originalName: imageResponse.file.originalname,
+      size: imageResponse.file.size,
+      mimeType: imageResponse.file.mimetype,
+    });
   }
   function onChange({ target }) {
     if (target.files) {
@@ -68,6 +67,7 @@ const useForm = (type) => {
     setValue,
     onChange,
     error,
+    picture,
     validate: () => validate(value),
     onBlur: () => validate(value),
   };

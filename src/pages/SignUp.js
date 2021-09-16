@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/auth';
 
 import Input from '../components/Form/Input';
-import Button from '../components/Form/Button';
-import useForm from '../Hooks/useForm';
+import Botao from '../components/Form/Botao';
 import { BACKEND } from '../constants';
+import { useHistory } from 'react-router-dom';
 
 const SignUp = () => {
+  const { authenticated, signUp, erro, useForm } = useContext(AuthContext);
   const nome = useForm();
   const cpf = useForm('cpf');
   const email = useForm('email');
@@ -13,49 +15,28 @@ const SignUp = () => {
   const image = useForm();
 
   async function handleSubmit(e) {
-    const [objReq, setObjReq] = {
-      nome: '',
-      cpf: '',
-      email: '',
-      password: '',
-      foto: {
-        path: '',
-        originalName: '',
-        size: '',
-        mimeType: '',
-      },
-    };
-
     e.preventDefault();
+
     if (
       nome.error === null &&
       cpf.error === null &&
       email.error === null &&
       password.error === null
     ) {
-      setObjReq({
+      const objReq = {
         nome: nome.value,
         cpf: cpf.value,
         email: email.value,
-        password: password.value,
+        senha: password.value,
+        nivelAcesso: 1,
         foto: {
-          path: '',
-          originalName: '',
-          size: '',
-          mimeType: '',
+          originalName: image.picture.originalName,
+          path: image.picture.path,
+          size: image.picture.size,
+          mimetype: image.picture.mimeType,
         },
-      });
-
-      let url = `${BACKEND}/usuarios/`;
-
-      await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      });
+      };
+      signUp(objReq);
     } else {
       alert('Todos os campos devem ser preenchidos corretamente!');
     }
@@ -68,7 +49,8 @@ const SignUp = () => {
       <Input label="Email" type="text" name="email" {...email} />
       <Input label="Senha" type="password" name="password" {...password} />
       <Input label="Foto de Perfil" type="file" name="image" {...image} />
-      <Button>Cadastrar</Button>
+      <Botao>Cadastrar</Botao>
+      {erro && <span>{erro}</span>}
     </form>
   );
 };
