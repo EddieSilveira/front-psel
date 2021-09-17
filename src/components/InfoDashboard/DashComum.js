@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core';
-import Modal from '../../components/Modal';
-import Table from '../../components/Table/Table';
 import { makeStyles } from '@material-ui/core/styles';
+import Modal from '../Modal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   principal: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     padding: '8px',
   },
   info: {
@@ -35,25 +34,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InfoDashboard = ({ objUsuario, date, listaUsuarios }) => {
-  const [admin, setAdmin] = useState(false);
+const DashComum = ({ user }) => {
   const classes = useStyles();
-
-  if (objUsuario.user.nivelAcesso === 999) setAdmin(true);
+  // let date = null;
+  const date = new Date(user.createdAt);
   return (
-    <div>
-      <Box className={classes.info}>
-        <Typography variant="subtitle1">
-          Email: {objUsuario.user.email}
-        </Typography>
-        <Typography variant="subtitle1">Cpf: {objUsuario.user.cpf}</Typography>
-        <Typography variant="subtitle1">
-          Cadastrado desde: {date.toUTCString()}
-        </Typography>
-        <Modal objUsuario={objUsuario} />
-      </Box>
-    </div>
+    <Box className={classes.info}>
+      <Typography variant="subtitle1">Email: {user.email}</Typography>
+      <Typography variant="subtitle1">Cpf: {user.cpf}</Typography>
+      <Typography variant="subtitle1">
+        Cadastrado desde: {date.toUTCString()}
+      </Typography>
+      <Modal objUsuario={user} />
+    </Box>
   );
 };
 
-export default InfoDashboard;
+export default DashComum;

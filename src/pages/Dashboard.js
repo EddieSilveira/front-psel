@@ -4,8 +4,9 @@ import { AuthContext } from '../contexts/auth';
 import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core';
 import { BACKEND } from '../constants';
 
+import InfoDashboard from '../components/InfoDashboard/Index';
+
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import InfoDashboard from '../components/InfoDashboard/index';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   sidebar: {
     backgroundColor: '#125D98',
-    margin: 0,
-    height: '100vh',
+    height: '99vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   principal: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     padding: '8px',
   },
   info: {
@@ -44,8 +44,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [objUsuario, setObjUsuario] = useState({});
   const [listaUsuarios, setListaUsuarios] = useState([]);
-  let date = null;
-  if (!loading) date = new Date(objUsuario.user.createdAt);
   let url = `${BACKEND}/usuarios/`;
 
   const jwtDecode = (t) => {
@@ -82,31 +80,40 @@ const Dashboard = () => {
       });
   }, []);
 
+  function handleLogout() {
+    if (window.confirm('Você realmente deseja sair?')) {
+      signOut();
+    }
+  }
+
   if (loading) return <h1>LOADING...</h1>;
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={3} className={classes.sidebar}>
+        <Grid item xs={12} sm={3} md={2} className={classes.sidebar}>
           <Avatar
             className={classes.avatar}
             alt="foto-usuario"
             src={`${BACKEND}/${objUsuario.user.foto.path}`}
           />
 
-          <Button variant="contained" color="secondary" onClick={signOut}>
+          <Button variant="contained" color="secondary" onClick={handleLogout}>
             Logout&nbsp;
             <ExitToAppIcon />
           </Button>
         </Grid>
-        <Grid item xs={12} sm={9} className={classes.principal}>
-          <Typography variant="h2">
-            Bem vindo de volta, {objUsuario.user.nome}!
+        <Grid item xs={12} sm={9} md={10} className={classes.principal}>
+          <Typography
+            variant="h3"
+            style={{ marginTop: '48px', marginBottom: '48px' }}
+          >
+            Olá, {objUsuario.user.nome}!
           </Typography>
+
           <InfoDashboard
             objUsuario={objUsuario}
             listaUsuarios={listaUsuarios}
-            date={date}
           />
         </Grid>
       </Grid>

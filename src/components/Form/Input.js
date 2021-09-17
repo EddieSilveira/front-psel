@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, FormLabel } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 const Input = ({ label, type, name, value, onChange, error, onBlur }) => {
   return (

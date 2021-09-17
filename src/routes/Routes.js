@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { AuthContext } from '../contexts/auth';
@@ -8,7 +8,7 @@ import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 
 function CustomRoute({ isPrivate, ...rest }) {
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, nivelAcesso } = useContext(AuthContext);
 
   if (isPrivate && !authenticated) {
     return <Redirect to="/signin" />;

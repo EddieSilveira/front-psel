@@ -2,14 +2,49 @@ import React, { createContext, useState } from 'react';
 import { BACKEND } from '../constants';
 import { useHistory } from 'react-router-dom';
 import useForm from '../Hooks/useForm';
+import { CodeSharp } from '@material-ui/icons';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
+  const [nivelAcesso, setNivelAcesso] = useState({});
   const [token, setToken] = useState(null);
   const [erro, setErro] = useState(null);
   const history = useHistory();
+
+  async function accessAuthorization(token) {
+    const jwtDecode = (t) => {
+      let token = {};
+      token.raw = t;
+      token.header = JSON.parse(window.atob(t.split('.')[0]));
+      token.payload = JSON.parse(window.atob(t.split('.')[1]));
+      return token;
+    };
+    const idUsuario = jwtDecode(token).payload.id;
+
+    let url = `${BACKEND}/usuarios/`;
+
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((user) => {
+          if (user._id === idUsuario) {
+            setNivelAcesso((prevState) => ({
+              ...prevState,
+              nivelAcesso: user.nivelAcesso,
+            }));
+          }
+        });
+      });
+  }
 
   async function signUp(objReq) {
     let url = `${BACKEND}/signup`;
@@ -39,7 +74,7 @@ const AuthProvider = ({ children }) => {
   async function editUser(objReq) {
     let url = `${BACKEND}/usuarios/`;
     let token = localStorage.getItem('token').replace('"', '').replace('"', '');
-
+    //Ajustar
     await fetch(url, {
       method: 'PUT',
       headers: {
@@ -72,6 +107,8 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem('token', JSON.stringify(data.token));
           setAuthenticated(true);
           setToken(data.token);
+
+          accessAuthorization(data.token);
           history.push('/dashboard');
         } else {
           alert('Login inválido!');
@@ -94,6 +131,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         authenticated,
+        nivelAcesso,
         signUp,
         signIn,
         editUser,

@@ -1,8 +1,7 @@
-import * as React from 'react';
-import { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/auth';
 
-import Input from '../../components/Form/Input';
+import Input from '../Form/Input';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
@@ -16,9 +15,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-export default function FormDialog({ objUsuario }) {
-  const [open, setOpen] = React.useState(false);
-
+export default function FormDialog({ objUsuario, open, setOpen, loading }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -34,6 +31,10 @@ export default function FormDialog({ objUsuario }) {
   const password = useForm();
   const image = useForm();
 
+  useEffect(() => {
+    document.title = 'Dashboard - Admin';
+  }, []);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -44,7 +45,6 @@ export default function FormDialog({ objUsuario }) {
       password.error === null
     ) {
       const objReq = {
-        _id: objUsuario._id,
         nome: nome.value,
         cpf: cpf.value,
         email: email.value,
@@ -58,19 +58,16 @@ export default function FormDialog({ objUsuario }) {
         },
       };
       editUser(objReq);
-      console.log(objReq);
       handleClose();
     } else {
       alert('Todos os campos devem ser preenchidos corretamente!');
       handleClose();
     }
   }
+  if (loading) return <h1>Loading...</h1>;
+
   return (
     <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-        <EditIcon />
-        &nbsp;Editar Usuário
-      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Editar informações</DialogTitle>
         <DialogContent>
@@ -79,22 +76,22 @@ export default function FormDialog({ objUsuario }) {
             label="Nome Completo"
             type="text"
             name="nome"
-            objUsuario={objUsuario}
             {...nome}
+            value={objUsuario ? objUsuario[0].nome : 'Nome Completo'}
           />
           <Input
             label="Cpf"
             type="text"
             name="cpf"
-            value={objUsuario.cpf}
             {...cpf}
+            value={objUsuario ? objUsuario[0].cpf : 'CPF'}
           />
           <Input
             label="Email"
             type="text"
             name="email"
-            value={objUsuario.email}
             {...email}
+            value={objUsuario ? objUsuario[0].email : 'Email'}
           />
           <Input label="Senha" type="password" name="password" {...password} />
           <Input label="Foto de Perfil" type="file" name="image" {...image} />
