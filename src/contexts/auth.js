@@ -36,6 +36,25 @@ const AuthProvider = ({ children }) => {
       });
   }
 
+  async function editUser(objReq) {
+    let url = `${BACKEND}/usuarios/`;
+    let token = localStorage.getItem('token').replace('"', '').replace('"', '');
+
+    await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(objReq),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  }
+
   async function signIn(dataForm) {
     const url = `${BACKEND}/signin`;
 
@@ -50,7 +69,6 @@ const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.auth) {
-          console.log(data);
           localStorage.setItem('token', JSON.stringify(data.token));
           setAuthenticated(true);
           setToken(data.token);
@@ -74,7 +92,16 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authenticated, signUp, signIn, signOut, erro, token, useForm }}
+      value={{
+        authenticated,
+        signUp,
+        signIn,
+        editUser,
+        signOut,
+        erro,
+        token,
+        useForm,
+      }}
     >
       {children}
     </AuthContext.Provider>

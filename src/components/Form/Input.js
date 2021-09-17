@@ -3,17 +3,20 @@ import { TextField, FormLabel } from '@material-ui/core';
 
 const Input = ({ label, type, name, value, onChange, error, onBlur }) => {
   return (
-    <div>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+    <div style={{ marginTop: '16px' }}>
       <TextField
         id={name}
         name={name}
         type={type}
+        label={label}
         onChange={onChange}
         value={value}
         onBlur={onBlur}
+        helperText={error && `${error}`}
+        fullWidth
+        color="secondary"
+        placeholder={`Insira ${label}`}
       ></TextField>
-      {error && <p>{error}</p>}
     </div>
   );
 };

@@ -3,7 +3,12 @@ import Button from '@material-ui/core/Button';
 
 const Botao = ({ children, ...props }) => {
   return (
-    <Button variant="contained" color="primary" {...props}>
+    <Button
+      style={{ marginTop: '32px' }}
+      variant="contained"
+      color="primary"
+      {...props}
+    >
       {children}
     </Button>
   );

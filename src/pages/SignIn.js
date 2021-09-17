@@ -3,14 +3,27 @@ import { AuthContext } from '../contexts/auth';
 import Input from '../components/Form/Input';
 import Botao from '../components/Form/Botao';
 import useForm from '../Hooks/useForm';
-import { Grid, FormControl, Container, Box } from '@material-ui/core';
+import { Grid, FormControl, Typography, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 const useStyles = makeStyles({
   root: {
-    backgroundImage: 'linear-gradient(120deg, #125D98, #F5A962)',
+    backgroundImage: 'linear-gradient(150deg, #125D98, #F5A962)',
     height: '100vh',
     flexGrow: 1,
+  },
+  paper: {
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  title: {
+    marginBottom: '16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -47,17 +60,17 @@ const SignIn = () => {
         alignContent="center"
         justifyContent="center"
       >
-        <Grid item xs={6}>
-          <FormControl onSubmit={(e) => handleSubmit(e)}>
-            <Box>
-              <h1>Login</h1>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={10} className={classes.paper}>
+            <Box className={classes.title}>
+              <Typography variant="h4">Bem vindo de volta!</Typography>
             </Box>
-
-            <Input label="Email ou CPF" type="text" name="login" {...login} />
-            <Input label="Senha" type="password" name="senha" {...senha} />
-            <Botao>Login</Botao>
-            {erro && <span>{erro}</span>}
-          </FormControl>
+            <FormControl>
+              <Input label="Email ou CPF" type="text" name="login" {...login} />
+              <Input label="Senha" type="password" name="senha" {...senha} />
+              <Botao onClick={(e) => handleSubmit(e)}>Login</Botao>
+            </FormControl>
+          </Paper>
         </Grid>
       </Grid>
     </div>
