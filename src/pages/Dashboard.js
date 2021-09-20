@@ -98,7 +98,12 @@ const Dashboard = () => {
             src={`${BACKEND}/${objUsuario.user.foto.path}`}
           />
 
-          <Button variant="contained" color="secondary" onClick={handleLogout}>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{ color: '#125D98', fontWeight: 'bold', padding: '12px' }}
+            onClick={handleLogout}
+          >
             Logout&nbsp;
             <ExitToAppIcon />
           </Button>
@@ -106,11 +111,11 @@ const Dashboard = () => {
         <Grid item xs={12} sm={9} md={10} className={classes.principal}>
           <Typography
             variant="h3"
+            mt={2}
             style={{ marginTop: '48px', marginBottom: '48px' }}
           >
             Olá, {objUsuario.user.nome}!
           </Typography>
-
           <InfoDashboard
             objUsuario={objUsuario}
             listaUsuarios={listaUsuarios}
