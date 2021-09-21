@@ -2,7 +2,6 @@ import React, { createContext, useState } from 'react';
 import { BACKEND } from '../constants';
 import { useHistory } from 'react-router-dom';
 import useForm from '../Hooks/useForm';
-import { CodeSharp } from '@material-ui/icons';
 
 const AuthContext = createContext();
 
@@ -65,9 +64,28 @@ const AuthProvider = ({ children }) => {
           setToken(data.token);
           history.push('/dashboard');
         } else {
-          setErro(data.erro.message);
+          console.log(data.erros);
           alert('Login inválido!');
         }
+      });
+  }
+
+  async function adminAddUser(objReq) {
+    let url = `${BACKEND}/usuarios/`;
+    let token = localStorage.getItem('token').replace('"', '').replace('"', '');
+
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(objReq),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
       });
   }
 
@@ -132,6 +150,7 @@ const AuthProvider = ({ children }) => {
       value={{
         authenticated,
         nivelAcesso,
+        adminAddUser,
         signUp,
         signIn,
         editUser,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BACKEND } from '../constants/index';
 
 const types = {
@@ -13,7 +13,7 @@ const types = {
   },
 };
 
-const useForm = (type) => {
+const useForm = (type, objUsuario, screen, nameInput) => {
   const [value, setValue] = useState('');
 
   const [picture, setPicture] = useState({
@@ -22,6 +22,22 @@ const useForm = (type) => {
     size: '',
     mimeType: '',
   });
+
+  useEffect(() => {
+    if (screen === 'edit') {
+      switch (nameInput) {
+        case 'nome':
+          setValue(objUsuario.nome);
+          break;
+        case 'cpf':
+          setValue(objUsuario.cpf);
+          break;
+        case 'email':
+          setValue(objUsuario.email);
+          break;
+      }
+    }
+  }, []);
 
   const [error, setError] = useState(null);
   function validate(value) {
@@ -58,6 +74,7 @@ const useForm = (type) => {
     if (target.files) {
       imageUpload(target.files[0]);
     }
+
     if (error) validate(target.value);
     setValue(target.value);
   }

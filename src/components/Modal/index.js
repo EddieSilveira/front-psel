@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/auth';
 
 import Input from '../../components/Form/Input';
@@ -28,11 +27,11 @@ export default function FormDialog({ objUsuario }) {
   };
 
   const { editUser, erro, useForm } = useContext(AuthContext);
-  const nome = useForm();
-  const cpf = useForm('cpf');
-  const email = useForm('email');
-  const password = useForm();
-  const image = useForm();
+  const nome = useForm('', objUsuario, 'edit', 'nome');
+  const cpf = useForm('cpf', objUsuario, 'edit', 'cpf');
+  const email = useForm('email', objUsuario, 'edit', 'email');
+  const password = useForm('', objUsuario, 'edit', 'password');
+  const image = useForm('', objUsuario, 'edit', 'image');
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -45,20 +44,24 @@ export default function FormDialog({ objUsuario }) {
     ) {
       const objReq = {
         _id: objUsuario._id,
-        nome: nome.value,
-        cpf: cpf.value,
-        email: email.value,
-        senha: password.value,
+        nome: nome.value ? nome.value : objUsuario.nome,
+        cpf: cpf.value ? cpf.value : objUsuario.cpf,
+        email: email.value ? email.value : objUsuario.email,
+        senha: password.value ? password.value : objUsuario.senha,
         nivelAcesso: 1,
         foto: {
-          originalName: image.picture.originalName,
-          path: image.picture.path,
-          size: image.picture.size,
-          mimetype: image.picture.mimeType,
+          originalName: image.picture
+            ? image.picture.originalName
+            : objUsuario.foto.originalName,
+          path: image.picture ? image.picture.path : objUsuario.foto.path,
+          size: image.picture ? image.picture.size : objUsuario.foto.size,
+          mimetype: image.picture
+            ? image.picture.mimeType
+            : objUsuario.foto.mimetype,
         },
       };
       editUser(objReq);
-      console.log(objReq);
+
       handleClose();
     } else {
       alert('Todos os campos devem ser preenchidos corretamente!');
@@ -67,7 +70,12 @@ export default function FormDialog({ objUsuario }) {
   }
   return (
     <div>
-      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleClickOpen}
+        style={{ color: '#125D98', fontWeight: 'bold' }}
+      >
         <EditIcon />
         &nbsp;Editar Usuário
       </Button>
@@ -82,20 +90,8 @@ export default function FormDialog({ objUsuario }) {
             objUsuario={objUsuario}
             {...nome}
           />
-          <Input
-            label="Cpf"
-            type="text"
-            name="cpf"
-            value={objUsuario.cpf}
-            {...cpf}
-          />
-          <Input
-            label="Email"
-            type="text"
-            name="email"
-            value={objUsuario.email}
-            {...email}
-          />
+          <Input label="Cpf" type="text" name="cpf" {...cpf} />
+          <Input label="Email" type="text" name="email" {...email} />
           <Input label="Senha" type="password" name="password" {...password} />
           <Input label="Foto de Perfil" type="file" name="image" {...image} />
         </DialogContent>

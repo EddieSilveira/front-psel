@@ -3,9 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from '../contexts/auth';
 import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core';
 import { BACKEND } from '../constants';
+import { useMediaQuery } from '@material-ui/core/';
 
 import InfoDashboard from '../components/InfoDashboard/Index';
-
+import DashComum from '../components/InfoDashboard/DashComum';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
@@ -14,10 +15,9 @@ const useStyles = makeStyles((theme) => ({
   },
   sidebar: {
     backgroundColor: '#125D98',
-    height: '99vh',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   avatar: {
@@ -44,8 +44,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [objUsuario, setObjUsuario] = useState({});
   const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [perfil, setPerfil] = useState(true);
+  const [table, setTable] = useState(false);
   let url = `${BACKEND}/usuarios/`;
-
+  const isActive = useMediaQuery('(max-width: 600px)');
   const jwtDecode = (t) => {
     let token = {};
     token.raw = t;
@@ -91,17 +93,63 @@ const Dashboard = () => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={3} md={2} className={classes.sidebar}>
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          md={2}
+          className={classes.sidebar}
+          style={!isActive ? { height: '99vh' } : { height: '250px' }}
+        >
           <Avatar
             className={classes.avatar}
             alt="foto-usuario"
-            src={`${BACKEND}/${objUsuario.user.foto.path}`}
+            src={!loading && `${BACKEND}/${objUsuario.user.foto.path}`}
           />
-
           <Button
             variant="contained"
             color="secondary"
-            style={{ color: '#125D98', fontWeight: 'bold', padding: '12px' }}
+            style={{
+              color: '#125D98',
+              fontWeight: 'bold',
+              padding: '12px',
+              width: '70%',
+              height: '10%',
+            }}
+            onClick={() => {
+              setTable(false);
+              setPerfil(true);
+            }}
+          >
+            Perfil
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{
+              color: '#125D98',
+              fontWeight: 'bold',
+              padding: '12px',
+              width: '70%',
+              height: '10%',
+            }}
+            onClick={() => {
+              setTable(true);
+              setPerfil(false);
+            }}
+          >
+            Lista de usuários
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{
+              color: '#125D98',
+              fontWeight: 'bold',
+              padding: '12px',
+              width: '70%',
+              height: '10%',
+            }}
             onClick={handleLogout}
           >
             Logout&nbsp;
@@ -110,16 +158,19 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={12} sm={9} md={10} className={classes.principal}>
           <Typography
-            variant="h3"
+            variant={!isActive ? 'h3' : 'h4'}
             mt={2}
             style={{ marginTop: '48px', marginBottom: '48px' }}
           >
             Olá, {objUsuario.user.nome}!
           </Typography>
-          <InfoDashboard
-            objUsuario={objUsuario}
-            listaUsuarios={listaUsuarios}
-          />
+          {perfil && <DashComum user={objUsuario.user} />}
+          {table && (
+            <InfoDashboard
+              objUsuario={objUsuario}
+              listaUsuarios={listaUsuarios}
+            />
+          )}
         </Grid>
       </Grid>
     </div>

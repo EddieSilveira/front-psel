@@ -25,6 +25,22 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  containerCadastro: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '24px',
+
+    '& a': {
+      color: '#F5A962',
+      fontSize: '18px',
+      fontWeight: 'bold',
+      textDecoration: 'none',
+      '&:hover': {
+        color: '#125D98',
+        fontSize: '22px',
+      },
+    },
+  },
 });
 
 const SignIn = () => {
@@ -63,12 +79,25 @@ const SignIn = () => {
         <Grid item xs={12} md={6}>
           <Paper elevation={10} className={classes.paper}>
             <Box className={classes.title}>
-              <Typography variant="h4">Bem vindo de volta!</Typography>
+              <Typography variant="h4">Bem vindos de volta!</Typography>
             </Box>
             <FormControl>
               <Input label="Email ou CPF" type="text" name="login" {...login} />
               <Input label="Senha" type="password" name="senha" {...senha} />
-              <Botao onClick={(e) => handleSubmit(e)}>Login</Botao>
+              <Botao
+                onClick={(e) => handleSubmit(e)}
+                style={{
+                  marginTop: '24px',
+                  padding: '8px',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                }}
+              >
+                Login
+              </Botao>
+              <Box className={classes.containerCadastro}>
+                <a href="/signup">Cadastre-se</a>
+              </Box>
             </FormControl>
           </Paper>
         </Grid>

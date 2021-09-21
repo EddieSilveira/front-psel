@@ -37,13 +37,21 @@ const useStyles = makeStyles((theme) => ({
 const DashComum = ({ user }) => {
   const classes = useStyles();
   // let date = null;
-  const date = new Date(user.createdAt);
+
+  function dataCadastro() {
+    let date = new Date(user.createdAt);
+    let dia = date.getDate().toString().padStart(2, '0');
+    let mes = (date.getMonth() + 1).toString().padStart(2, '0');
+    let ano = date.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
+
   return (
     <Box className={classes.info}>
       <Typography variant="subtitle1">Email: {user.email}</Typography>
       <Typography variant="subtitle1">Cpf: {user.cpf}</Typography>
       <Typography variant="subtitle1">
-        Cadastrado desde: {date.toUTCString()}
+        Cadastrado desde: {dataCadastro()}
       </Typography>
       <Modal objUsuario={user} />
     </Box>

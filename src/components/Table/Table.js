@@ -1,83 +1,13 @@
-// import React, { useState } from 'react';
-// import { DataGrid } from '@material-ui/data-grid';
-// import { Button } from '@material-ui/core';
-// import EditIcon from '@material-ui/icons/Edit';
-
-// export default function DataTable({ listaUsuarios }) {
-//   const [rowData, setRowData] = useState({});
-//   const [data, setData] = useState(listaUsuarios);
-//   const [open, setOpen] = React.useState(false);
-//   const [loading, setLoading] = useState(true);
-
-//   const renderDetailsButton = (params) => {
-//     return (
-//       <strong>
-//         <Button
-//           variant="contained"
-//           color="secondary"
-//           size="small"
-//           style={{ marginLeft: 16 }}
-//           onClick={() => {
-//             setOpen(true);
-//             setLoading(false);
-//           }}
-//         >
-//           <EditIcon />
-//         </Button>
-//       </strong>
-//     );
-//   };
-
-//   const columns = [
-//     { field: '_id', headerName: 'ID', width: 170 },
-//     { field: 'nome', headerName: 'NOME', width: 170 },
-//     { field: 'cpf', headerName: 'CPF', width: 170 },
-//     {
-//       field: 'email',
-//       headerName: 'EMAIL',
-//       type: 'email',
-//       width: 190,
-//     },
-//     {
-//       field: 'nivelAcesso',
-//       headerName: 'ACESSO',
-//       type: 'text',
-//       width: 120,
-//     },
-//     {
-//       field: 'actions',
-//       headerName: 'ATUALIZAR',
-//       width: 160,
-//       renderCell: renderDetailsButton,
-//     },
-//   ];
-
-//   return (
-//     <div style={{ height: 400, width: '100%', margin: 0 }}>
-//       <DataGrid
-//         rows={listaUsuarios}
-//         columns={columns}
-//         getRowId={(row) => row._id}
-//         pageSize={5}
-//         rowsPerPageOptions={[5]}
-//         onSelectionModelChange={(ids) => {
-//           const selectedIDs = new Set(ids);
-//           const selectedRowData = listaUsuarios.filter((row) =>
-//             selectedIDs.has(row._id.toString()),
-//           );
-//           setRowData(selectedRowData);
-//         }}
-//         checkboxSelection
-//       />
-//     </div>
-//   );
-// }
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import MaterialTable from 'material-table';
+import { AuthContext } from '../../contexts/auth';
 
 function Table({ listaUsuarios }) {
   const [data, setData] = useState(listaUsuarios);
   const [userEdit, setUserEdit] = useState({});
+  const [userSave, setUserSave] = useState({});
+  const [loading, setLoading] = useState(true);
+  const { editUser, adminAddUser } = useContext(AuthContext);
 
   const columns = [
     { title: 'Id', field: '_id', editable: false },
@@ -87,6 +17,48 @@ function Table({ listaUsuarios }) {
     { title: 'Acesso', field: 'nivelAcesso' },
   ];
 
+  async function updateUser() {
+    if (!loading) {
+      const objReq = {
+        _id: userEdit._id,
+        nome: userEdit.nome,
+        cpf: userEdit.cpf,
+        email: userEdit.email,
+        senha: userEdit.senha,
+        nivelAcesso: userEdit.nivelAcesso,
+        foto: {
+          originalName: userEdit ? userEdit.foto.originalName : 'default.png',
+          path: userEdit ? userEdit.foto.path : 'public/uploads/default.png',
+          size: userEdit ? userEdit.foto.size : 2000,
+          mimetype: userEdit ? userEdit.foto.mimetype : 'image/png',
+        },
+      };
+      editUser(objReq);
+      setLoading(true);
+    }
+  }
+
+  async function saveUser() {
+    if (!loading) {
+      const objReq = {
+        nome: userSave.nome,
+        cpf: userSave.cpf,
+        email: userSave.email,
+        senha: 'admin',
+        nivelAcesso: userSave.nivelAcesso,
+        foto: {
+          originalName: 'default.png',
+          path: 'default.png',
+          size: 200,
+          mimetype: 'image/png',
+        },
+      };
+      adminAddUser(objReq);
+      setLoading(false);
+    }
+  }
+
+  updateUser();
   return (
     <div className="App">
       <MaterialTable
@@ -102,20 +74,13 @@ function Table({ listaUsuarios }) {
               ];
               setTimeout(() => {
                 setData(updatedRows);
+                setUserSave(newRow);
+                setLoading(false);
+                if (!loading) saveUser();
                 resolve();
               }, 2000);
             }),
-          onRowDelete: (selectedRow) =>
-            new Promise((resolve, reject) => {
-              const index = selectedRow.tableData._id;
 
-              const updatedRows = [...data];
-              updatedRows.splice(index, 1);
-              setTimeout(() => {
-                setData(updatedRows);
-                resolve();
-              }, 2000);
-            }),
           onRowUpdate: (updatedRow, oldRow) =>
             new Promise((resolve, reject) => {
               const index = oldRow.tableData.id;
@@ -124,12 +89,22 @@ function Table({ listaUsuarios }) {
 
               setTimeout(() => {
                 setData(updatedRows);
-                console.log(index);
+                setUserEdit(updatedRow);
+                setLoading(false);
                 resolve();
               }, 2000);
             }),
         }}
         options={{
+          headerStyle: {
+            backgroundColor: '#125D98',
+            color: '#F5A962',
+            fontWeight: 'bold',
+          },
+          rowStyle: {
+            color: '#125D98',
+            fontWeight: 'bold',
+          },
           actionsColumnIndex: -1,
           addRowPosition: 'first',
         }}

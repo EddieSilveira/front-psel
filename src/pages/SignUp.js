@@ -26,14 +26,19 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  btnSignUp: {
+    padding: '12px',
+    fontWeight: 'bold',
+    fontSize: '16px',
+  },
 });
 
 const SignUp = () => {
   const { authenticated, signUp, erro, useForm } = useContext(AuthContext);
-  const nome = useForm();
-  const cpf = useForm('cpf');
-  const email = useForm('email');
-  const password = useForm();
+  const nome = useForm('', {}, 'signup');
+  const cpf = useForm('cpf', {}, 'signup');
+  const email = useForm('email', {}, 'signup');
+  const password = useForm('', {}, 'signup');
   const image = useForm();
   const classes = useStyles();
 
@@ -94,7 +99,12 @@ const SignUp = () => {
                 name="image"
                 {...image}
               />
-              <Botao onClick={(e) => handleSubmit(e)}>Cadastrar</Botao>
+              <Botao
+                onClick={(e) => handleSubmit(e)}
+                className={classes.btnSignUp}
+              >
+                Cadastrar
+              </Botao>
             </FormControl>
           </Paper>
         </Grid>
