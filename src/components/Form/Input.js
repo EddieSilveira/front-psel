@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextField } from '@material-ui/core';
 
 const Input = ({ label, type, name, value, onChange, error, onBlur }) => {
   return (
-    <div style={{ marginTop: '16px' }}>
+    <div style={{ marginTop: '16px', marginLeft: '8px', flex: '1' }}>
       <TextField
         id={name}
         name={name}

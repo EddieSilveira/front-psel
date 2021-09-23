@@ -36,6 +36,20 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     padding: '16px',
   },
+  boxBtnSideBar: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnSideBar: {
+    color: '#125D98',
+    fontWeight: 'bold',
+    padding: '16px',
+    width: '100%',
+    height: '20%',
+    marginBottom: '12px',
+  },
 }));
 
 const Dashboard = () => {
@@ -44,6 +58,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [objUsuario, setObjUsuario] = useState({});
   const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [listarUsuarios, setListarUsuarios] = useState(false);
   const [perfil, setPerfil] = useState(true);
   const [table, setTable] = useState(false);
   let url = `${BACKEND}/usuarios/`;
@@ -73,6 +88,10 @@ const Dashboard = () => {
         setListaUsuarios(data);
         data.forEach((user) => {
           if (user._id === idUsuario) {
+            console.log(user.nivelAcesso);
+            if (user.nivelAcesso === 999) {
+              setListarUsuarios(true);
+            }
             setObjUsuario({
               user,
             });
@@ -88,7 +107,7 @@ const Dashboard = () => {
     }
   }
 
-  if (loading) return <h1>LOADING...</h1>;
+  if (loading) return <h1>CARREGANDO...</h1>;
 
   return (
     <div className={classes.root}>
@@ -104,57 +123,46 @@ const Dashboard = () => {
           <Avatar
             className={classes.avatar}
             alt="foto-usuario"
-            src={!loading && `${BACKEND}/${objUsuario.user.foto.path}`}
+            src={`${BACKEND}/${objUsuario.user.foto.path
+              .replace('public/', 'files/')
+              .replace('uploads/', '')}`}
           />
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{
-              color: '#125D98',
-              fontWeight: 'bold',
-              padding: '12px',
-              width: '70%',
-              height: '10%',
-            }}
-            onClick={() => {
-              setTable(false);
-              setPerfil(true);
-            }}
-          >
-            Perfil
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{
-              color: '#125D98',
-              fontWeight: 'bold',
-              padding: '12px',
-              width: '70%',
-              height: '10%',
-            }}
-            onClick={() => {
-              setTable(true);
-              setPerfil(false);
-            }}
-          >
-            Lista de usuários
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{
-              color: '#125D98',
-              fontWeight: 'bold',
-              padding: '12px',
-              width: '70%',
-              height: '10%',
-            }}
-            onClick={handleLogout}
-          >
-            Logout&nbsp;
-            <ExitToAppIcon />
-          </Button>
+          <Box className={classes.boxBtnSideBar}>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.btnSideBar}
+              onClick={() => {
+                setTable(false);
+                setPerfil(true);
+              }}
+            >
+              Perfil
+            </Button>
+            {listarUsuarios && (
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.btnSideBar}
+                onClick={() => {
+                  setTable(true);
+                  setPerfil(false);
+                }}
+              >
+                Lista de usuários
+              </Button>
+            )}
+
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.btnSideBar}
+              onClick={handleLogout}
+            >
+              <ExitToAppIcon />
+              &nbsp; Logout
+            </Button>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={9} md={10} className={classes.principal}>
           <Typography
@@ -176,5 +184,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

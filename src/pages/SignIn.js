@@ -5,7 +5,8 @@ import Botao from '../components/Form/Botao';
 import useForm from '../Hooks/useForm';
 import { Grid, FormControl, Typography, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import LockIcon from '@material-ui/icons/Lock';
+import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles({
   root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    color: '#125D98',
   },
   containerCadastro: {
     display: 'flex',
@@ -40,6 +42,14 @@ const useStyles = makeStyles({
         fontSize: '22px',
       },
     },
+  },
+  wrapperInput: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  iconsInput: {
+    color: '#125D98',
+    marginTop: '28px',
   },
 });
 
@@ -76,20 +86,30 @@ const SignIn = () => {
         alignContent="center"
         justifyContent="center"
       >
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={9} md={6}>
           <Paper elevation={10} className={classes.paper}>
             <Box className={classes.title}>
               <Typography variant="h4">Bem vindos de volta!</Typography>
             </Box>
             <FormControl>
-              <Input label="Email ou CPF" type="text" name="login" {...login} />
-              <Input label="Senha" type="password" name="senha" {...senha} />
+              <Box className={classes.wrapperInput}>
+                <PersonIcon className={classes.iconsInput} />
+                <Input
+                  label="Email ou CPF"
+                  type="text"
+                  name="login"
+                  {...login}
+                />
+              </Box>
+              <Box className={classes.wrapperInput}>
+                <LockIcon className={classes.iconsInput} />
+                <Input label="Senha" type="password" name="senha" {...senha} />
+              </Box>
               <Botao
                 onClick={(e) => handleSubmit(e)}
                 style={{
                   marginTop: '24px',
                   padding: '8px',
-                  fontWeight: 'bold',
                   fontSize: '16px',
                 }}
               >
