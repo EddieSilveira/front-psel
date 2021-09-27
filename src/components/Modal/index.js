@@ -77,7 +77,7 @@ export default function FormDialog({ objUsuario }) {
         style={{ color: '#125D98', fontWeight: 'bold' }}
       >
         <EditIcon />
-        &nbsp;Editar Usuário
+        &nbsp;Editar Perfil
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Editar informações</DialogTitle>

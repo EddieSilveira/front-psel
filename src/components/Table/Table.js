@@ -4,8 +4,7 @@ import { AuthContext } from '../../contexts/auth';
 
 function Table({ listaUsuarios }) {
   const [data, setData] = useState(listaUsuarios);
-  const [userEdit, setUserEdit] = useState({});
-  const [userSave, setUserSave] = useState({});
+
   const [loading, setLoading] = useState(true);
   const { editUser, adminAddUser } = useContext(AuthContext);
 
@@ -17,50 +16,53 @@ function Table({ listaUsuarios }) {
     { title: 'Acesso', field: 'nivelAcesso' },
   ];
 
-  async function updateUser() {
-    if (!loading) {
-      const objReq = {
-        _id: userEdit._id,
-        nome: userEdit.nome,
-        cpf: userEdit.cpf,
-        email: userEdit.email,
-        senha: userEdit.senha,
-        nivelAcesso: userEdit.nivelAcesso,
-        foto: {
-          originalName: userEdit ? userEdit.foto.originalName : 'default.png',
-          path: userEdit ? userEdit.foto.path : 'public/uploads/default.png',
-          size: userEdit ? userEdit.foto.size : 2000,
-          mimetype: userEdit ? userEdit.foto.mimetype : 'image/png',
-        },
-      };
-      editUser(objReq);
-      setLoading(true);
-    }
+  async function updateUser(updatedRow) {
+    const objReq = {
+      _id: updatedRow._id,
+      nome: updatedRow.nome,
+      cpf: updatedRow.cpf,
+      email: updatedRow.email,
+      senha: updatedRow.senha,
+      nivelAcesso: updatedRow.nivelAcesso,
+      foto: {
+        originalName: !updatedRow
+          ? 'default.png'
+          : updatedRow.foto.originalName,
+        path: !updatedRow ? 'public/uploads/default.png' : updatedRow.foto.path,
+        size: !updatedRow ? 2000 : updatedRow.foto.size,
+        mimetype: !updatedRow ? 'image/png' : updatedRow.foto.mimetype,
+      },
+    };
+    editUser(objReq);
+    setLoading(true);
   }
 
-  async function saveUser() {
-    if (!loading) {
-      const objReq = {
-        nome: userSave.nome,
-        cpf: userSave.cpf,
-        email: userSave.email,
-        senha: 'admin',
-        nivelAcesso: userSave.nivelAcesso,
-        foto: {
-          originalName: 'default.png',
-          path: 'default.png',
-          size: 200,
-          mimetype: 'image/png',
-        },
-      };
-      adminAddUser(objReq);
-      setLoading(false);
+  async function saveUser(newRow) {
+    if (!newRow.nome && !newRow.cpf && !newRow.email && !newRow.nivelAcesso) {
+      alert('Preencha os campos corretamente');
+      return false;
     }
+
+    const objReq = {
+      nome: newRow.nome,
+      cpf: newRow.cpf,
+      email: newRow.email,
+      senha: 'admin',
+      nivelAcesso: newRow.nivelAcesso,
+      foto: {
+        originalName: 'default.png',
+        path: 'default.png',
+        size: 200,
+        mimetype: 'image/png',
+      },
+    };
+
+    adminAddUser(objReq);
+    setLoading(false);
   }
 
-  updateUser();
   return (
-    <div className="App">
+    <div>
       <MaterialTable
         title="Lista de Usuários"
         data={data}
@@ -74,9 +76,8 @@ function Table({ listaUsuarios }) {
               ];
               setTimeout(() => {
                 setData(updatedRows);
-                setUserSave(newRow);
                 setLoading(false);
-                if (!loading) saveUser();
+                saveUser(newRow);
                 resolve();
               }, 2000);
             }),
@@ -89,8 +90,9 @@ function Table({ listaUsuarios }) {
 
               setTimeout(() => {
                 setData(updatedRows);
-                setUserEdit(updatedRow);
                 setLoading(false);
+                console.log(updatedRow);
+                updateUser(updatedRow);
                 resolve();
               }, 2000);
             }),

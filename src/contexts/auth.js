@@ -62,10 +62,12 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem('token', JSON.stringify(data.token));
           setAuthenticated(true);
           setToken(data.token);
+          setErro(false);
           history.push('/dashboard');
         } else {
-          console.log(data.erros);
-          alert('Login inválido!');
+          setErro(
+            'Preencha os dados corretamente, não foi possível fazer o cadastro!',
+          );
         }
       });
   }
@@ -84,9 +86,7 @@ const AuthProvider = ({ children }) => {
       body: JSON.stringify(objReq),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+      .then((data) => {});
   }
 
   async function editUser(objReq) {
@@ -103,13 +103,15 @@ const AuthProvider = ({ children }) => {
       body: JSON.stringify(objReq),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+      .then((data) => {});
   }
 
   async function signIn(dataForm) {
     const url = `${BACKEND}/signin`;
+    if (!dataForm.login || !dataForm.senha) {
+      setErro('Preencha corretamente os campos!');
+      return false;
+    }
 
     await fetch(url, {
       method: 'POST',
@@ -125,11 +127,11 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem('token', JSON.stringify(data.token));
           setAuthenticated(true);
           setToken(data.token);
-
+          setErro(false);
           accessAuthorization(data.token);
           history.push('/dashboard');
         } else {
-          alert('Login inválido!');
+          setErro(data.message);
         }
       })
       .catch(function (error) {

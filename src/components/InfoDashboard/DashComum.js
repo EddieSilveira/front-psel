@@ -1,42 +1,45 @@
-import React, { useState } from 'react';
-import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core';
+import React from 'react';
+import { Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '../Modal';
+import EmailIcon from '@material-ui/icons/Email';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import EventNoteIcon from '@material-ui/icons/EventNote';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  sidebar: {
-    backgroundColor: '#125D98',
-    margin: 0,
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  avatar: {
-    height: '100px',
-    width: '100px',
-    marginTop: '24px',
-  },
-  principal: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: '8px',
-  },
   info: {
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
+    borderTop: '3px solid #125D98',
+  },
+  wrapperInfo: {
+    width: '80%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    margin: '8px 0',
+  },
+  destaqueInfo: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    lineHeight: 1.4,
+    color: '#125D98',
+    margin: '0 8px',
+  },
+  itemInfo: {
+    fontSize: '16px',
+    lineHeight: 1.4,
+    fontWeight: 'bold',
+    margin: '0 8px',
   },
 }));
 
 const DashComum = ({ user }) => {
   const classes = useStyles();
-  // let date = null;
 
   function dataCadastro() {
     let date = new Date(user.createdAt);
@@ -48,11 +51,33 @@ const DashComum = ({ user }) => {
 
   return (
     <Box className={classes.info}>
-      <Typography variant="subtitle1">Email: {user.email}</Typography>
-      <Typography variant="subtitle1">Cpf: {user.cpf}</Typography>
-      <Typography variant="subtitle1">
-        Cadastrado desde: {dataCadastro()}
-      </Typography>
+      <Box className={classes.wrapperInfo}>
+        <EmailIcon className={classes.destaqueInfo} />
+        <Typography variant="body1" className={classes.destaqueInfo}>
+          Email:
+        </Typography>
+        <Typography variant="body1" className={classes.itemInfo}>
+          {user.email}
+        </Typography>
+      </Box>
+      <Box className={classes.wrapperInfo}>
+        <AssignmentIndIcon className={classes.destaqueInfo} />
+        <Typography variant="body1" className={classes.destaqueInfo}>
+          Cpf:
+        </Typography>
+        <Typography variant="body1" className={classes.itemInfo}>
+          {user.cpf}
+        </Typography>
+      </Box>
+      <Box className={classes.wrapperInfo}>
+        <EventNoteIcon className={classes.destaqueInfo} />
+        <Typography variant="body1" className={classes.destaqueInfo}>
+          Cadastrado desde:
+        </Typography>
+        <Typography variant="body1" className={classes.itemInfo}>
+          {dataCadastro()}
+        </Typography>
+      </Box>
       <Modal objUsuario={user} />
     </Box>
   );

@@ -8,6 +8,8 @@ import { useMediaQuery } from '@material-ui/core/';
 import InfoDashboard from '../components/InfoDashboard/Index';
 import DashComum from '../components/InfoDashboard/DashComum';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonIcon from '@material-ui/icons/Person';
+import ListIcon from '@material-ui/icons/List';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,19 +19,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#125D98',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   avatar: {
     height: '100px',
     width: '100px',
-    marginTop: '24px',
+    marginTop: '80px',
   },
   principal: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    padding: '8px',
   },
   info: {
     display: 'flex',
@@ -88,7 +89,6 @@ const Dashboard = () => {
         setListaUsuarios(data);
         data.forEach((user) => {
           if (user._id === idUsuario) {
-            console.log(user.nivelAcesso);
             if (user.nivelAcesso === 999) {
               setListarUsuarios(true);
             }
@@ -118,7 +118,7 @@ const Dashboard = () => {
           sm={3}
           md={2}
           className={classes.sidebar}
-          style={!isActive ? { height: '99vh' } : { height: '250px' }}
+          style={!isActive ? { height: '99vh' } : { height: '400px' }}
         >
           <Avatar
             className={classes.avatar}
@@ -137,7 +137,8 @@ const Dashboard = () => {
                 setPerfil(true);
               }}
             >
-              Perfil
+              <PersonIcon />
+              &nbsp; Perfil
             </Button>
             {listarUsuarios && (
               <Button
@@ -149,7 +150,8 @@ const Dashboard = () => {
                   setPerfil(false);
                 }}
               >
-                Lista de usuários
+                <ListIcon />
+                &nbsp;Usuários
               </Button>
             )}
 
@@ -164,11 +166,10 @@ const Dashboard = () => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={9} md={10} className={classes.principal}>
+        <Grid item xs={12} sm={9} lg={10} className={classes.principal}>
           <Typography
             variant={!isActive ? 'h3' : 'h4'}
-            mt={2}
-            style={{ marginTop: '48px', marginBottom: '48px' }}
+            style={{ marginTop: '70px' }}
           >
             Olá, {objUsuario.user.nome}!
           </Typography>

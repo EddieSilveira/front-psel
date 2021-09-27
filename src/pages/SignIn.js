@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import Input from '../components/Form/Input';
 import Botao from '../components/Form/Botao';
@@ -7,6 +7,8 @@ import { Grid, FormControl, Typography, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
+
+import AlertSite from '../components/Alert/AlertSite';
 
 const useStyles = makeStyles({
   root: {
@@ -77,6 +79,7 @@ const SignIn = () => {
       alert('Todos os campos devem ser preenchidos corretamente!');
     }
   }
+
   return (
     <div className={classes.root}>
       <Grid
@@ -87,6 +90,7 @@ const SignIn = () => {
         justifyContent="center"
       >
         <Grid item xs={12} sm={9} md={6}>
+          {erro && <AlertSite message={erro} />}
           <Paper elevation={10} className={classes.paper}>
             <Box className={classes.title}>
               <Typography variant="h4">Bem vindos de volta!</Typography>
@@ -111,6 +115,8 @@ const SignIn = () => {
                   marginTop: '24px',
                   padding: '8px',
                   fontSize: '16px',
+                  color: '#F5A962',
+                  fontWeight: 'bold',
                 }}
               >
                 Login
